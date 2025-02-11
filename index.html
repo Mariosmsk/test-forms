@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Form</title>
+</head>
+<body>
+    <h2>Submit Data</h2>
+    <form id="dataForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+        
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br><br>
+        
+        <button type="submit">Submit</button>
+    </form>
+    
+    <script>
+        document.getElementById("dataForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData.entries());
+            
+            fetch("https://api.github.com/repos/Mariosmsk/test-forms/issues", {
+                method: "POST",
+                headers: {
+                    "Authorization": "token YOUR_GITHUB_PERSONAL_ACCESS_TOKEN",
+                    "Accept": "application/vnd.github.v3+json",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    title: `New Submission: ${data.name}`,
+                    body: `Name: ${data.name}\nEmail: ${data.email}`
+                })
+            }).then(response => response.json()).then(data => {
+                alert("Form submitted successfully!");
+            }).catch(error => {
+                console.error("Error:", error);
+                alert("Failed to submit data.");
+            });
+        });
+    </script>
+</body>
+</html>
