@@ -23,19 +23,26 @@
             const formData = new FormData(event.target);
             const data = Object.fromEntries(formData.entries());
             
-            fetch("https://api.github.com/repos/Mariosmsk/test-forms/issues", {
+            fetch("https://api.github.com/repos/Mariosmsk/test-forms/actions/workflows/update-csv.yml/dispatches", {
                 method: "POST",
                 headers: {
-                    "Authorization": "token YOUR_GITHUB_PERSONAL_ACCESS_TOKEN",
+                    "Authorization": "Bearer YOUR_GITHUB_PERSONAL_ACCESS_TOKEN",
                     "Accept": "application/vnd.github.v3+json",
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    title: `New Submission: ${data.name}`,
-                    body: `Name: ${data.name}\nEmail: ${data.email}`
+                    ref: "main",
+                    inputs: {
+                        name: data.name,
+                        email: data.email
+                    }
                 })
-            }).then(response => response.json()).then(data => {
-                alert("Form submitted successfully!");
+            }).then(response => {
+                if (response.ok) {
+                    alert("Form submitted successfully! Workflow triggered.");
+                } else {
+                    throw new Error("Failed to trigger workflow");
+                }
             }).catch(error => {
                 console.error("Error:", error);
                 alert("Failed to submit data.");
