@@ -1,0 +1,31 @@
+name: Update CSV with Form Submission
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: "Name"
+        required: true
+      email:
+        description: "Email"
+        required: true
+
+jobs:
+  update-csv:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Append data to CSV
+        run: |
+          echo "${{ github.event.inputs.name }},${{ github.event.inputs.email }},$(date)" >> data.csv
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          git add data.csv
+          git commit -m "Add new form submission"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
