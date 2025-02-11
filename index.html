@@ -38,11 +38,12 @@
                         }),
                     }
                 );
-
+            
+                const responseData = await response.text(); // Read response body
                 if (response.ok) {
                     message.innerText = "Workflow triggered successfully!";
                 } else {
-                    message.innerText = "Failed to trigger workflow. Check API permissions.";
+                    message.innerText = `Failed to trigger workflow. API Response: ${responseData}`;
                 }
             } catch (error) {
                 message.innerText = "Error: " + error.message;
