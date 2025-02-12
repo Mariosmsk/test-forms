@@ -17,6 +17,7 @@
 
             message.innerText = "Running workflow...";
 
+            const token = "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"; 
             const owner = "Mariosmsk";
             const repo = "test-forms";
             const workflowFileName = "update-csv.yml";
@@ -27,6 +28,7 @@
                     {
                         method: "POST",
                         headers: {
+                            Authorization: `Bearer ${token}`,
                             Accept: "application/vnd.github.v3+json",
                             "Content-Type": "application/json",
                         },
